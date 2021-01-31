@@ -7,6 +7,6 @@ package rpa.common;
  */
 public final class Constants {
 
-    public static final String ChromeDriverPath = "././chromedriver88.exe";
+    public static final String ChromeDriverPath = "././chromedriver88";
 
 }

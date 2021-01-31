@@ -8,6 +8,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import rpa.common.CommonUtils;
 import rpa.common.Constants;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,12 +20,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class DownLoadVideo {
 
-    public static void getVideo() {
+    public static void getVideo() throws AWTException {
 
         System.setProperty("webdriver.chrome.driver", Constants.ChromeDriverPath);
 
         ChromeOptions options = new ChromeOptions();
-        String userProfile = "C:/Users/kousei/AppData/Local/Google/Chrome/User Data";
+//        String userProfile = "C:/Users/kousei/AppData/Local/Google/Chrome/User Data";
+        String userProfile = "/Users/kousei/Library/Application Support/Google/Chrome";
         options.addArguments("user-data-dir=" + userProfile);
         options.addArguments("--start-maximized");
 
@@ -76,16 +80,32 @@ public class DownLoadVideo {
 
         DoSleep(3000);
 
-        WebElement row1 = driver.findElement(By.xpath("/html/body/ytd-app/div/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[1]"));
-        row1.click();
+        String URL1 = "/html/body/ytd-app/div/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[";
+        String URL2 = "]/div[1]/div/ytd-badge-supported-renderer/div[1]/span";
 
+        Integer i = 1;
+        Boolean dlFlg = false;
+        while (i <= 20 && !dlFlg){
+            String URL = URL1 + i.toString() + URL2;
+            WebElement row = driver.findElement(By.xpath(URL));
 
-        DoSleep(5000);
+            if (row.getText().equals("新着")){
 
-        WebElement download = driver.findElement(By.xpath("/html/body/ytd-app/div/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[5]/div[2]/div"));
-        download.click();
+                row.click();
 
-        DoSleep(600000);
+                DoSleep(3000);
+                WebElement download2 = driver.findElement(By.xpath("/html/body/ytd-app/div/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[5]/div[2]/div"));
+
+                System.out.println(download2.getText());
+                download2.click();
+                DoSleep(20000);
+
+                driver.navigate().back();
+
+                DoSleep(1000);
+            }
+            i++;
+        }
 
         driver.close();
 
